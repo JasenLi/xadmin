@@ -1,0 +1,47 @@
+configurations {
+    provided
+    querydslapt
+}
+
+
+sourceSets {
+    main { compileClasspath = compileClasspath + configurations.provided } // to workaround gradle lacking a "provides" scope
+    generated {
+        java {
+            srcDirs =  ["${buildDir}/generated/source/apt/main"] // define to be able to use from everywhere
+        }
+    }
+}
+
+task generateQueryDSL(type: JavaCompile, group: 'build', description: 'Generates the QueryDSL query types') {
+    doFirst {
+        file(sourceSets.generated.java.srcDirs[0]).deleteDir()
+        file(sourceSets.generated.java.srcDirs[0]).mkdirs()
+    }
+    source = sourceSets.main.java
+    classpath = configurations.compile + configurations.querydslapt
+    options.compilerArgs = [
+            "-proc:only",
+            "-processor", "com.querydsl.apt.jpa.JPAAnnotationProcessor"
+    ]
+    destinationDir = sourceSets.generated.java.srcDirs.iterator().next()
+}
+
+compileJava {
+    options.fork = true
+    options.encoding = "UTF-8"
+    dependsOn generateQueryDSL
+    source generateQueryDSL.destinationDir
+}
+
+
+
+clean {
+    // when cleaning, also delete these generated files
+    delete sourceSets.generated.java.srcDirs
+}
+
+dependencies {
+    compile group: 'com.querydsl', name: 'querydsl-jpa', version: '4.2.1'
+    compile group: 'com.querydsl', name: 'querydsl-apt', version: '4.2.1'
+}
