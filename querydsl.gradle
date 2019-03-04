@@ -45,3 +45,4 @@ dependencies {
     compile group: 'com.querydsl', name: 'querydsl-jpa', version: '4.2.1'
     compile group: 'com.querydsl', name: 'querydsl-apt', version: '4.2.1'
 }
+

@@ -12,9 +12,9 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
  */
 @EnableFeignClients
 @EnableDiscoveryClient
-@SpringBootApplication(scanBasePackages = "com.jasonli.sunny")
-public class XadminApplication {
+@SpringBootApplication
+public class XAdminApplication {
     public static void main(String[] args) {
-        SpringApplication.run(XadminApplication.class, args);
+        SpringApplication.run(XAdminApplication.class, args);
     }
 }
